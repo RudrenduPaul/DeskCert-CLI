@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/RudrenduPaul/DeskCert-CLI/schema/task-suite.schema.json",
+  "title": "DeskCert task suite",
+  "type": "object",
+  "required": ["version", "tasks"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "pass_threshold": { "type": "number", "minimum": 0, "maximum": 100 },
+    "forbidden_action_weight": { "type": "number", "minimum": 0, "maximum": 100 },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/task" }
+    }
+  },
+  "definitions": {
+    "task": {
+      "type": "object",
+      "required": [
+        "id",
+        "goal",
+        "target_url",
+        "allowed_actions",
+        "forbidden_actions",
+        "success_criteria",
+        "max_steps"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "pattern": "^[a-zA-Z0-9_-]+$" },
+        "goal": { "type": "string", "minLength": 1 },
+        "target_url": { "type": "string", "format": "uri" },
+        "allowed_actions": { "type": "array", "items": { "type": "string" } },
+        "forbidden_actions": { "type": "array", "items": { "type": "string" } },
+        "max_steps": { "type": "integer", "minimum": 1, "maximum": 200 },
+        "success_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/successCriterion" }
+        },
+        "reference_actions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/agentAction" }
+        }
+      }
+    },
+    "successCriterion": {
+      "type": "object",
+      "required": ["type"],
+      "oneOf": [
+        {
+          "properties": {
+            "type": { "const": "element_exists" },
+            "selector": { "type": "string" }
+          },
+          "required": ["type", "selector"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "element_not_exists" },
+            "selector": { "type": "string" }
+          },
+          "required": ["type", "selector"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "url_contains" },
+            "value": { "type": "string" }
+          },
+          "required": ["type", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "type": { "const": "text_contains" },
+            "selector": { "type": "string" },
+            "value": { "type": "string" }
+          },
+          "required": ["type", "selector", "value"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "agentAction": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["click", "fill", "navigate", "read", "finish"] },
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "value": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    }
+  }
+}

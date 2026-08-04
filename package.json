@@ -1,0 +1,69 @@
+{
+  "name": "deskcert-cli",
+  "version": "0.1.0",
+  "description": "Certify whether an AI agent is safe to operate your internal web application before production rollout. Author a YAML task suite against your own app, run it with Playwright, and gate CI/CD on a forbidden-action safety score.",
+  "keywords": [
+    "ai-agent",
+    "agent-safety",
+    "agent-evaluation",
+    "computer-use",
+    "browser-automation",
+    "playwright",
+    "ci-cd",
+    "mcp",
+    "model-context-protocol",
+    "llm-agent",
+    "security-gate",
+    "task-suite",
+    "cli"
+  ],
+  "homepage": "https://github.com/RudrenduPaul/DeskCert-CLI#readme",
+  "bugs": {
+    "url": "https://github.com/RudrenduPaul/DeskCert-CLI/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RudrenduPaul/DeskCert-CLI.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Rudrendu Paul",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "deskcert": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "examples",
+    "schema"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint src --ext .ts",
+    "pretest": "npm run build",
+    "test": "node --test test/*.test.mjs",
+    "prepublishOnly": "npm run build",
+    "fixture:serve": "node examples/example-suite/fixture-app/server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "commander": "^12.1.0",
+    "js-yaml": "^4.1.0",
+    "playwright": "^1.48.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "eslint": "^8.57.1",
+    "typescript": "^5.6.3"
+  }
+}

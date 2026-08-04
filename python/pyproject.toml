@@ -1,0 +1,85 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "deskcert-cli"
+version = "0.1.0"
+description = "Certify whether an AI agent is safe to operate your internal web application before production rollout. Author a YAML task suite against your own app, run it with Playwright, and gate CI/CD on a forbidden-action safety score."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Rudrendu Paul" }]
+keywords = [
+  "ai-agent",
+  "agent-safety",
+  "agent-evaluation",
+  "computer-use",
+  "browser-automation",
+  "playwright",
+  "ci-cd",
+  "mcp",
+  "model-context-protocol",
+  "llm-agent",
+  "security-gate",
+  "task-suite",
+  "cli",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Testing",
+  "Topic :: Security",
+  "Topic :: Software Development :: Quality Assurance",
+  "Typing :: Typed",
+]
+dependencies = [
+  "playwright>=1.47.0",
+  "pyyaml>=6.0.1",
+  "jsonschema>=4.23.0",
+  "click>=8.1.7",
+  "mcp>=1.1.0,<2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/RudrenduPaul/DeskCert-CLI"
+Repository = "https://github.com/RudrenduPaul/DeskCert-CLI"
+Issues = "https://github.com/RudrenduPaul/DeskCert-CLI/issues"
+Documentation = "https://github.com/RudrenduPaul/DeskCert-CLI#readme"
+
+[project.scripts]
+deskcert = "deskcert.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3.0", "mypy>=1.13.0", "ruff>=0.7.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["deskcert"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"../schema/task-suite.schema.json" = "deskcert/schema/task-suite.schema.json"
+"../examples/example-suite" = "deskcert/examples/example-suite"
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+# Explicit, minimal-but-real rule set: pyflakes + pycodestyle errors + import
+# sort + bugbear. Deliberately excludes pyupgrade (UP) -- this package targets
+# py39 and keeps `List`/`Optional` from `typing` for readability rather than
+# chasing every new-syntax lint on each Python release.
+select = ["E", "F", "I", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

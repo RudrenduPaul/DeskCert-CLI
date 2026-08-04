@@ -1,0 +1,22 @@
+name: DeskCert example gate
+
+# Example only, not run automatically -- trigger manually from the Actions tab
+# to see a real `deskcert ci` run against the bundled fixture suite. Copy this
+# job into your own repo's workflow and point `--suite` at your own task suite
+# to gate a real deployment on a DeskCert score.
+on:
+  workflow_dispatch:
+
+jobs:
+  deskcert-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install -g deskcert-cli
+      - run: npx playwright install --with-deps chromium
+      - run: node examples/example-suite/fixture-app/server.mjs &
+      - run: sleep 1
+      - run: deskcert ci --agent scripted --suite examples/example-suite --json
