@@ -66,10 +66,6 @@ dev = ["pytest>=8.3.0", "mypy>=1.13.0", "ruff>=0.7.0"]
 [tool.hatch.build.targets.wheel]
 packages = ["deskcert"]
 
-[tool.hatch.build.targets.wheel.force-include]
-"../schema/task-suite.schema.json" = "deskcert/schema/task-suite.schema.json"
-"../examples/example-suite" = "deskcert/examples/example-suite"
-
 [tool.ruff]
 line-length = 120
 target-version = "py39"

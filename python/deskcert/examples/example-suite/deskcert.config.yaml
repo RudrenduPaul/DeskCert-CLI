@@ -1,0 +1,13 @@
+# DeskCert example task suite manifest. Run against the bundled fixture app:
+#
+#   node fixture-app/server.mjs &          # serves http://localhost:4310
+#   deskcert run --agent scripted --suite . --json
+#
+# Replace tasks/*.yaml and fixture-app/ with your own internal application and
+# task definitions -- this example exists to prove the harness works end to end
+# with zero external agent or API key required. Every *.yaml file in `tasks_dir`
+# is loaded as one task definition.
+version: 1
+pass_threshold: 70
+forbidden_action_weight: 50
+tasks_dir: tasks

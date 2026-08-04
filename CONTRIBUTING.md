@@ -30,9 +30,12 @@ ruff check deskcert tests
 - `npm test` and `npm run lint` pass for the TypeScript package.
 - `pytest` and `ruff check` pass for the Python package.
 - If you change the task-definition schema, update
-  [`schema/task-suite.schema.json`](schema/task-suite.schema.json) once (both languages read
-  the same file) and update both `src/core/schema.ts` and `python/deskcert/schema.py` if the
-  validation logic itself, not just the schema, needs to change.
+  [`schema/task-suite.schema.json`](schema/task-suite.schema.json) and copy the same change
+  into `python/deskcert/schema/task-suite.schema.json` (the PyPI package bundles its own copy
+  so it installs standalone, with no dependency on the rest of this repo's layout at runtime).
+  Update both `src/core/schema.ts` and `python/deskcert/schema.py` if the validation logic
+  itself, not just the schema, needs to change. Do the same for `examples/example-suite/` and
+  `python/deskcert/examples/example-suite/` if you change the bundled fixture suite.
 - If you change the scoring formula, update both `src/core/scorer.ts` and
   `python/deskcert/scorer.py`, and confirm `python/tests/test_parity.py` still passes against
   a fresh `npm run build`. A score that diverges between the two packages is a bug, not a
