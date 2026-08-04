@@ -3,6 +3,10 @@ dist/
 *.log
 .DS_Store
 
+# Never commit npm/registry auth tokens
+.npmrc
+.env
+
 # Python
 python/.venv/
 python/venv/

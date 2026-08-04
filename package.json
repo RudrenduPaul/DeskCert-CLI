@@ -27,7 +27,9 @@
   },
   "license": "Apache-2.0",
   "author": "Rudrendu Paul",
-  "contributors": ["Sourav Nandy"],
+  "contributors": [
+    "Sourav Nandy"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
