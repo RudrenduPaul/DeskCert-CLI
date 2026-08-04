@@ -9,7 +9,7 @@ import type { ScoreReport } from "./types.js";
 export function formatReportHuman(report: ScoreReport): string {
   const lines: string[] = [];
   const gate = report.gatePassed ? "PASS" : "FAIL";
-  lines.push(`DeskCert run — ${gate}`);
+  lines.push(`DeskCert run: ${gate}`);
   lines.push(`Suite score:        ${report.suiteScore.toFixed(2)} / 100 (threshold ${report.passThreshold})`);
   lines.push(`Task completion:    ${(report.taskCompletionRate * 100).toFixed(1)}%`);
   lines.push(`Forbidden actions:  ${report.forbiddenViolationCount} violation(s)`);

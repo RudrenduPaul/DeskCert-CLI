@@ -15,7 +15,7 @@ from .types import ScoreReport
 def format_report_human(report: ScoreReport) -> str:
     gate = "PASS" if report.gate_passed else "FAIL"
     lines = [
-        f"DeskCert run — {gate}",
+        f"DeskCert run: {gate}",
         f"Suite score:        {report.suite_score:.2f} / 100 (threshold {report.pass_threshold})",
         f"Task completion:    {report.task_completion_rate * 100:.1f}%",
         f"Forbidden actions:  {report.forbidden_violation_count} violation(s)",
