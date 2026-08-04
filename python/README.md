@@ -3,7 +3,7 @@
 **Certify whether an AI agent is safe to operate your internal web app before you give it production access.**
 
 [![CI](https://github.com/RudrenduPaul/DeskCert-CLI/actions/workflows/ci.yml/badge.svg)](https://github.com/RudrenduPaul/DeskCert-CLI/actions/workflows/ci.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://img.shields.io/npm/v/deskcert-cli?label=npm)](https://www.npmjs.com/package/deskcert-cli)
 [![PyPI](https://img.shields.io/pypi/v/deskcert-cli?label=PyPI)](https://pypi.org/project/deskcert-cli/)
 
@@ -66,6 +66,21 @@ convenience-only command, `deskcert serve-fixture`, so you can run the bundled f
 without Node installed; the npm package's equivalent is running its bundled
 `fixture-app/server.mjs` directly with `node`, as shown below.
 
+## Table of Contents
+
+- [Quickstart](#quickstart)
+- [What v0.1 does, and does not, cover](#what-v01-does-and-does-not-cover)
+- [Features](#features)
+- [CLI reference](#cli-reference)
+- [GitHub Action](#github-action)
+- [Writing a task suite](#writing-a-task-suite)
+- [Scoring model](#scoring-model)
+- [Comparison](#comparison)
+- [What is DeskCert, and why does it exist](#what-is-deskcert-and-why-does-it-exist)
+- [FAQ](#faq)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Quickstart
 
 ```
@@ -104,7 +119,7 @@ consoles) are web apps today, which is what v0.1 is scoped to test well.
   and an accessibility-tree text dump, return the next action. Wire up Claude computer-use,
   LangGraph, CrewAI, or an in-house loop in a few lines; the bundled `scripted` adapter needs
   no agent or API key at all, for a first run or for CI self-tests. See
-  [docs/agent-adapter.md](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/docs/agent-adapter.md) for the full interface and a worked example.
+  [docs/agent-adapter.md](docs/agent-adapter.md) for the full interface and a worked example.
 - **Two independent implementations, one scoring contract.** The npm package and the PyPI
   package each run their own Playwright driver and their own scorer, with the Python package
   implementing its own runner and scorer directly. Both are required to score the same
@@ -116,7 +131,7 @@ consoles) are web apps today, which is what v0.1 is scoped to test well.
 - **`target_url` is restricted to `http(s)://`.** The task-suite schema rejects `file://` and
   `javascript:` URLs outright, so a malicious or careless task definition can't be used to read
   local files or execute an inline script through the runner. See
-  [`schema/task-suite.schema.json`](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/schema/task-suite.schema.json).
+  [`schema/task-suite.schema.json`](schema/task-suite.schema.json).
 
 ## CLI reference
 
@@ -161,7 +176,7 @@ Every subcommand supports `--help` for the full flag list, including on the Pyth
     npx deskcert-cli ci --suite ./deskcert-suite --adapter-module ./my-agent-adapter.js
 ```
 `deskcert ci`'s exit code is the gate: a failing step here blocks the merge or the deploy the
-same way a failing test job would. See [`.github/workflows/deskcert-example.yml`](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/.github/workflows/deskcert-example.yml)
+same way a failing test job would. See [`.github/workflows/deskcert-example.yml`](.github/workflows/deskcert-example.yml)
 for a complete, runnable example against the bundled fixture suite.
 
 ## Writing a task suite
@@ -188,7 +203,7 @@ action, falling back to its `type` if `name` is omitted, so name your dangerous 
 explicitly: `delete_record`, `submit_payment`, `send_email`. The generic action type alone
 (`click`, `fill`) is too coarse to gate on, since almost every real action is one of those
 two. The full schema lives at
-[`schema/task-suite.schema.json`](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/schema/task-suite.schema.json) and both language
+[`schema/task-suite.schema.json`](schema/task-suite.schema.json) and both language
 implementations validate against it directly.
 
 ## Scoring model
@@ -273,7 +288,7 @@ on every other task. See the fixture run at the top of this README.
 
 **Can I use this to gate a deployment pipeline?**
 Yes, that's the intended use. `deskcert ci` returns exit code `0`/`1`/`2`, and
-[`.github/workflows/deskcert-example.yml`](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/.github/workflows/deskcert-example.yml) shows a
+[`.github/workflows/deskcert-example.yml`](.github/workflows/deskcert-example.yml) shows a
 working GitHub Actions step built on it.
 
 **Does DeskCert run on Windows, macOS, and Linux?**
@@ -290,20 +305,20 @@ tools answer different questions and the full breakdown is in the
 [Comparison](#comparison) table above.
 
 **What license is DeskCert under, and can I use it commercially?**
-[Apache 2.0](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/LICENSE). You can use, modify, and redistribute DeskCert commercially, including
+[Apache 2.0](LICENSE). You can use, modify, and redistribute DeskCert commercially, including
 inside a closed-source deployment pipeline, subject to the license's standard attribution and
 patent-grant terms.
 
 ## Contributing
 
-Issues and pull requests are welcome. See [CONTRIBUTING.md](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/CONTRIBUTING.md) for the full
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full
 development setup. Before opening a PR: `npm test` and `npm run lint` must pass for the
 TypeScript package, `pytest` and `ruff check` must pass for the Python package, and if you
 touch the task-definition schema, update both `src/core/schema.ts`-adjacent validation and
 `python/deskcert/schema.py` together. A schema field that only one language validates is
 treated as a bug, not a documentation gap. Security issues follow the process in
-[SECURITY.md](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/SECURITY.md).
+[SECURITY.md](SECURITY.md).
 
 ## License
 
-[Apache 2.0](https://github.com/RudrenduPaul/DeskCert-CLI/blob/main/LICENSE)
+[Apache 2.0](LICENSE)

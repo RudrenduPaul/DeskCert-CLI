@@ -66,6 +66,21 @@ convenience-only command, `deskcert serve-fixture`, so you can run the bundled f
 without Node installed; the npm package's equivalent is running its bundled
 `fixture-app/server.mjs` directly with `node`, as shown below.
 
+## Table of Contents
+
+- [Quickstart](#quickstart)
+- [What v0.1 does, and does not, cover](#what-v01-does-and-does-not-cover)
+- [Features](#features)
+- [CLI reference](#cli-reference)
+- [GitHub Action](#github-action)
+- [Writing a task suite](#writing-a-task-suite)
+- [Scoring model](#scoring-model)
+- [Comparison](#comparison)
+- [What is DeskCert, and why does it exist](#what-is-deskcert-and-why-does-it-exist)
+- [FAQ](#faq)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Quickstart
 
 ```

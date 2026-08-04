@@ -1,6 +1,6 @@
 {
   "name": "deskcert-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Certify whether an AI agent is safe to operate your internal web application before production rollout. Author a YAML task suite against your own app, run it with Playwright, and gate CI/CD on a forbidden-action safety score.",
   "keywords": [
     "ai-agent",
