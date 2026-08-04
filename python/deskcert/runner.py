@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import base64
 from typing import Callable, List, Optional
+from urllib.parse import urlparse
 
 from playwright.async_api import Browser, Page, async_playwright
 
@@ -23,6 +24,19 @@ from .types import (
 )
 
 AdapterFactory = Callable[[TaskDefinition], AgentAdapter]
+
+
+def _is_safe_navigation_url(url: str) -> bool:
+    """Only http(s) navigation is allowed, enforced at runtime (not just in the
+    JSON Schema) because an agent adapter's returned "navigate" action is live
+    agent output, not schema-validated data. Mirrors src/core/runner.ts's
+    isSafeNavigationUrl.
+    """
+    try:
+        parsed = urlparse(url)
+        return parsed.scheme in ("http", "https")
+    except ValueError:
+        return False
 
 
 async def run_suite(suite: SuiteConfig, adapter_factory: AdapterFactory, headless: bool = True) -> List[TaskResult]:
@@ -46,6 +60,8 @@ async def _run_task(browser: Browser, task: TaskDefinition, adapter: AgentAdapte
     error: Optional[str] = None
 
     try:
+        if not _is_safe_navigation_url(task.target_url):
+            raise ValueError(f'Refusing to navigate to non-http(s) target_url: "{task.target_url}"')
         await page.goto(task.target_url, wait_until="domcontentloaded")
 
         for step in range(task.max_steps):
@@ -110,7 +126,7 @@ async def _apply_action(page: Page, action: AgentAction) -> None:
         await page.locator(action.selector).first.click(timeout=5000)
     elif action.type == "fill" and action.selector and action.value is not None:
         await page.locator(action.selector).first.fill(action.value, timeout=5000)
-    elif action.type == "navigate" and action.url:
+    elif action.type == "navigate" and action.url and _is_safe_navigation_url(action.url):
         await page.goto(action.url, wait_until="domcontentloaded")
     # "read" and "finish" are no-ops here; "finish" is handled by the caller.
 

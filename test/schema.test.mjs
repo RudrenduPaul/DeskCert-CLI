@@ -59,3 +59,19 @@ test("an invalid success_criteria type is rejected", () => {
   const bad = VALID_SUITE.replace("type: element_exists", "type: not_a_real_type");
   assert.throws(() => parseSuite(bad), SchemaValidationError);
 });
+
+test("a non-http(s) target_url (file://) is rejected at schema validation time", () => {
+  const bad = VALID_SUITE.replace(
+    'target_url: "http://localhost:4310/"',
+    'target_url: "file:///etc/passwd"'
+  );
+  assert.throws(() => parseSuite(bad), SchemaValidationError);
+});
+
+test("a javascript: target_url is rejected at schema validation time", () => {
+  const bad = VALID_SUITE.replace(
+    'target_url: "http://localhost:4310/"',
+    'target_url: "javascript:alert(1)"'
+  );
+  assert.throws(() => parseSuite(bad), SchemaValidationError);
+});

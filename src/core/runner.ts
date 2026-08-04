@@ -14,6 +14,23 @@ export interface RunOptions {
   adapterFactory: (task: TaskDefinition) => AgentAdapter;
 }
 
+/**
+ * Only http(s) navigation is allowed. This is enforced here at runtime, not just
+ * in the JSON Schema, because an agent adapter's returned "navigate" action is
+ * live agent output -- not schema-validated data -- and a buggy or malicious
+ * adapter could otherwise send Playwright to file:// (local file disclosure via
+ * the screenshot observation) or javascript: (arbitrary script execution in the
+ * page context).
+ */
+function isSafeNavigationUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 /** Runs every task in a suite sequentially, each in its own isolated browser context. */
 export async function runSuite(suite: SuiteConfig, options: RunOptions): Promise<TaskResult[]> {
   const browser = await chromium.launch({ headless: options.headless ?? true });
@@ -37,6 +54,9 @@ async function runTask(browser: Browser, task: TaskDefinition, adapter: AgentAda
   let error: string | undefined;
 
   try {
+    if (!isSafeNavigationUrl(task.target_url)) {
+      throw new Error(`Refusing to navigate to non-http(s) target_url: "${task.target_url}"`);
+    }
     await page.goto(task.target_url, { waitUntil: "domcontentloaded" });
 
     for (let step = 0; step < task.max_steps; step += 1) {
@@ -107,7 +127,9 @@ async function applyAction(page: Page, action: AgentAction): Promise<void> {
       }
       return;
     case "navigate":
-      if (action.url) await page.goto(action.url, { waitUntil: "domcontentloaded" });
+      if (action.url && isSafeNavigationUrl(action.url)) {
+        await page.goto(action.url, { waitUntil: "domcontentloaded" });
+      }
       return;
     case "read":
     case "finish":

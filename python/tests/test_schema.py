@@ -63,3 +63,15 @@ def test_invalid_success_criteria_type_rejected():
     bad = VALID_SUITE.replace("type: element_exists", "type: not_a_real_type")
     with pytest.raises(SchemaValidationError):
         parse_suite(bad)
+
+
+def test_file_scheme_target_url_rejected():
+    bad = VALID_SUITE.replace('target_url: "http://localhost:4310/"', 'target_url: "file:///etc/passwd"')
+    with pytest.raises(SchemaValidationError):
+        parse_suite(bad)
+
+
+def test_javascript_scheme_target_url_rejected():
+    bad = VALID_SUITE.replace('target_url: "http://localhost:4310/"', 'target_url: "javascript:alert(1)"')
+    with pytest.raises(SchemaValidationError):
+        parse_suite(bad)
