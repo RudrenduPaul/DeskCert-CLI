@@ -97,7 +97,8 @@ consoles) are web apps today, which is what v0.1 is scoped to test well.
 - **Pluggable agent adapter.** `AgentAdapter` is a two-method interface: given a screenshot
   and an accessibility-tree text dump, return the next action. Wire up Claude computer-use,
   LangGraph, CrewAI, or an in-house loop in a few lines; the bundled `scripted` adapter needs
-  no agent or API key at all, for a first run or for CI self-tests.
+  no agent or API key at all, for a first run or for CI self-tests. See
+  [docs/agent-adapter.md](docs/agent-adapter.md) for the full interface and a worked example.
 - **Two independent implementations, one scoring contract.** The npm package and the PyPI
   package each run their own Playwright driver and their own scorer, with the Python package
   implementing its own runner and scorer directly. Both are required to score the same
