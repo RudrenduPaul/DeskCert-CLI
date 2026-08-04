@@ -1,7 +1,7 @@
 """Human-readable and JSON report formatting. Mirrors src/core/report.ts,
-including the anti-sycophancy scope-limitation footer required by this repo's
-CLAUDE.md: a passing score means the agent passed this task suite and these
-guardrails, not that it is "safe" in general.
+including the scope-limitation footer on every report: a passing score means
+the agent passed this task suite and these guardrails, not that it is "safe"
+in general.
 """
 
 from __future__ import annotations

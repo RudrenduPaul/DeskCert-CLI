@@ -1,6 +1,6 @@
 """Shared dataclasses mirroring src/core/types.ts field-for-field. Keep these two
 files in sync by hand -- a schema field added to one language without the other
-is a shippable bug, not a documentation footnote (see repo CLAUDE.md).
+is a shippable bug, not a documentation footnote.
 """
 
 from __future__ import annotations

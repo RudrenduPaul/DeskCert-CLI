@@ -1,6 +1,6 @@
-"""Regression test for the CSO-flagged finding: a library caller can construct a
-SuiteConfig directly (bypassing schema.validate_suite_object entirely), so the
-runtime navigation guard in runner.py must reject unsafe schemes on its own.
+"""Hardening regression test: a library caller can construct a SuiteConfig
+directly (bypassing schema.validate_suite_object entirely), so the runtime
+navigation guard in runner.py must reject unsafe schemes on its own.
 Mirrors test/runner.security.test.mjs.
 """
 

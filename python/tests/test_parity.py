@@ -1,6 +1,6 @@
 """Cross-language parity: the Python scorer must produce the same score for the
-same fixture run as the TypeScript scorer (repo CLAUDE.md engineering standard
-4). Runs the bundled example suite through the Python CLI and, if a built
+same fixture run as the TypeScript scorer. Runs the bundled example suite
+through the Python CLI and, if a built
 `dist/cli.js` is present (built by `npm run build` in CI and dev), through the
 Node CLI too, then asserts the two JSON reports agree on every score field.
 Skips the cross-language half gracefully when the Node build isn't present

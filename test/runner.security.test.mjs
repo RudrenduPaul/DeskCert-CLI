@@ -2,10 +2,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { runSuite, ScriptedAdapter } from "../dist/index.js";
 
-// Regression test for the CSO-flagged finding: a library caller can construct a
-// SuiteConfig object directly (bypassing parseSuite/loadSuite's schema check
-// entirely), so the runtime navigation guard in runner.ts must reject unsafe
-// schemes on its own, not rely on schema validation as the only gate.
+// Hardening regression test: a library caller can construct a SuiteConfig
+// object directly (bypassing parseSuite/loadSuite's schema check entirely),
+// so the runtime navigation guard in runner.ts must reject unsafe schemes on
+// its own, not rely on schema validation as the only gate.
 
 test("runSuite refuses to navigate to a non-http(s) target_url even when schema validation is bypassed", async () => {
   const suite = {

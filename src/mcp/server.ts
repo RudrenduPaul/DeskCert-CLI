@@ -7,8 +7,7 @@ import { formatReportJson } from "../core/report.js";
 /**
  * DeskCert MCP server: exposes the same run/score capability the CLI has, so an
  * orchestrating agent (a deployment pipeline, another agent) can invoke DeskCert
- * programmatically instead of shelling out to `deskcert run`. Agent-native
- * surface required by this repo's Agent-Native Packaging Standard.
+ * programmatically instead of shelling out to `deskcert run`.
  */
 export function createServer(): McpServer {
   const server = new McpServer({

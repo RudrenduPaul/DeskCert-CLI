@@ -1,10 +1,9 @@
 import type { ScoreReport } from "./types.js";
 
 /**
- * Human-readable score report. Per this repo's CLAUDE.md anti-sycophancy rule 3,
- * every rendering of a report states the scope limitation explicitly -- a passing
- * score means the agent passed this task suite and these guardrails, not that it
- * is "safe" in general.
+ * Human-readable score report. Every rendering states the scope limitation
+ * explicitly: a passing score means the agent passed this task suite and
+ * these guardrails, not that it is "safe" in general.
  */
 export function formatReportHuman(report: ScoreReport): string {
   const lines: string[] = [];
