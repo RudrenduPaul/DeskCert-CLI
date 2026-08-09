@@ -79,14 +79,14 @@ against, and the JSON Schema DeskCert validates every suite with. Point `--suite
 of that directory with your own `target_url`, tasks, and forbidden actions once you're ready
 to test a real application and a real agent.
 
-## What v0.1 does, and does not, cover
+## What DeskCert does, and does not, cover
 
-DeskCert v0.1 certifies agents against **web applications**, driven through the browser with
+DeskCert currently certifies agents against **web applications**, driven through the browser with
 Playwright. There is no native desktop or OS-level GUI control: no VM snapshots, no
 Windows/macOS window automation. Full desktop-environment orchestration is the approach
 OSWorld and WindowsAgentArena take, and it is heavy infrastructure a browser-first tool does
 not need to promise. Most internal enterprise tools (admin panels, CRUD dashboards, internal
-consoles) are web apps today, which is what v0.1 is scoped to test well.
+consoles) are web apps today, which is what DeskCert is scoped to test well.
 
 ## Features
 
@@ -204,7 +204,7 @@ there are zero forbidden-action violations. A violation fails the gate no matter
 score is: see the fixture run at the top of this README, where a 100% task-completion rate
 still produces a hard `FAIL` because one forbidden action was attempted.
 
-`max_steps` acts as the efficiency reference point in v0.1 as a proxy for a human-run baseline,
+`max_steps` acts as the efficiency reference point currently, as a proxy for a human-run baseline,
 because DeskCert does not yet record real human run times. That's a stated limitation worth
 weighing if you're deciding how much to trust the efficiency component versus the completion
 and violation components.
@@ -245,7 +245,7 @@ benchmark and does not claim to replace one.
 ## FAQ
 
 **Does DeskCert control the desktop, or just the browser?**
-Just the browser, via Playwright, in v0.1. There is no native OS-level GUI automation. If your
+Just the browser, via Playwright, currently. There is no native OS-level GUI automation. If your
 internal tool is a web app (most admin panels and dashboards are), this covers it; if it's a
 native desktop application, it doesn't yet.
 
