@@ -1,13 +1,88 @@
 # DeskCert
 
-**Certify whether an AI agent is safe to operate your internal web app before you give it production access.**
-
 [![CI](https://github.com/RudrenduPaul/DeskCert-CLI/actions/workflows/ci.yml/badge.svg)](https://github.com/RudrenduPaul/DeskCert-CLI/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![npm version](https://img.shields.io/npm/v/deskcert-cli?label=npm)](https://www.npmjs.com/package/deskcert-cli)
 [![PyPI](https://img.shields.io/pypi/v/deskcert-cli?label=PyPI)](https://pypi.org/project/deskcert-cli/)
 
+**Certify whether an AI agent is safe to operate your internal web app before you give it production access.**
+
 ![DeskCert scaffolding a task suite and failing a CI gate on a forbidden delete action](https://raw.githubusercontent.com/RudrenduPaul/DeskCert-CLI/main/docs/demo.gif)
+
+## Install
+
+```
+npm install -g deskcert-cli
+npx playwright install chromium
+```
+
+or
+
+```
+pip install deskcert-cli
+playwright install chromium
+```
+
+Both packages install a `deskcert` binary with the same `init`/`run`/`ci`/`mcp` surface,
+scored by the same rules (see [Scoring model](#scoring-model)). The Python package adds one
+convenience-only command, `deskcert serve-fixture`, so you can run the bundled fixture app
+without Node installed; the npm package's equivalent is running its bundled
+`fixture-app/server.mjs` directly with `node`, as shown below.
+
+## Quickstart
+
+```
+deskcert init                                    # scaffold an example suite + fixture app
+node ./deskcert-suite/fixture-app/server.mjs &    # or: deskcert serve-fixture (Python, no Node needed)
+deskcert run --agent scripted --suite ./deskcert-suite
+```
+
+`deskcert init` writes a runnable example: two tasks, a tiny local admin panel to run them
+against, and the JSON Schema DeskCert validates every suite with. Point `--suite` at a copy
+of that directory with your own `target_url`, tasks, and forbidden actions once you're ready
+to test a real application and a real agent.
+
+## Features
+
+- **Bring your own application.** `target_url` in a task definition points at whatever you're
+  testing: staging, a local fixture, an internal environment behind your VPN. DeskCert never
+  ships a fixed task set to run against public software.
+- **Explicit forbidden-action gate.** Every task lists `forbidden_actions` by name. If the
+  agent attempts one, DeskCert intercepts it before it reaches the page, records the
+  violation with the exact action and step number, and fails the suite gate unconditionally.
+  A violation is never averaged away by an otherwise-good score.
+- **CI-runnable exit codes.** `deskcert ci` exits `0` on a pass, `1` when the score is below
+  threshold, `2` when any forbidden-action violation occurred, so a pipeline can distinguish
+  "not good enough yet" from "this agent tried something dangerous."
+- **Pluggable agent adapter.** `AgentAdapter` is a two-method interface: given a screenshot
+  and an accessibility-tree text dump, return the next action. Wire up Claude computer-use,
+  LangGraph, CrewAI, or an in-house loop in a few lines; the bundled `scripted` adapter needs
+  no agent or API key at all, for a first run or for CI self-tests. See
+  [docs/agent-adapter.md](docs/agent-adapter.md) for the full interface and a worked example.
+- **Two independent implementations, one scoring contract.** The npm package and the PyPI
+  package each run their own Playwright driver and their own scorer, with the Python package
+  implementing its own runner and scorer directly. Both are required to score the same
+  fixture run identically; `python/tests/test_parity.py` checks it directly against a built
+  `dist/cli.js`.
+- **MCP server for agent-native invocation.** `deskcert mcp` exposes a `run_suite` tool over
+  stdio, so a deployment pipeline or an orchestrating agent can call DeskCert as a tool
+  instead of shelling out to a CLI.
+- **`target_url` is restricted to `http(s)://`.** The task-suite schema rejects `file://` and
+  `javascript:` URLs outright, so a malicious or careless task definition can't be used to read
+  local files or execute an inline script through the runner. See
+  [`schema/task-suite.schema.json`](schema/task-suite.schema.json).
+
+## Comparison
+
+| | DeskCert | [OSWorld](https://github.com/xlang-ai/OSWorld) | [WindowsAgentArena](https://github.com/microsoft/WindowsAgentArena) | [TheAgentCompany](https://github.com/TheAgentCompany/TheAgentCompany) | [OpenAgentSafety](https://github.com/Open-Agent-Safety/OpenAgentSafety) |
+|---|---|---|---|---|---|
+| Target application | **Your own web app** | Fixed public software (LibreOffice, GIMP, Chrome, VS Code) | Fixed public Windows software | A simulated company environment | A fixed simulated environment |
+| Task suite | **You author it, in YAML** | Fixed benchmark tasks | Fixed benchmark tasks | Fixed benchmark tasks | Fixed adversarial-instruction tasks |
+| Explicit forbidden-action gate | **Yes, weighted heavily, unconditional gate fail** | No | No | No | Adversarial-instruction focus, not a per-task allow/forbid gate |
+| CI-runnable exit code | **Yes (0/1/2)** | Not designed for CI gating | Not designed for CI gating | Not designed for CI gating | Not designed for CI gating |
+| Environment | Browser (Playwright) | Full OS via VM snapshot | Full Windows OS via VM | Containerized simulated company | Simulated environment |
+| GitHub stars (2026-08-03) | new | 3,061 | 885 | 755 | 32 |
+| Last commit (2026-08-03) | today | 2026-07-28 | 2026-04-13 | 2025-11-17 | 2026-07-06 |
 
 Every existing computer-use benchmark (OSWorld, WindowsAgentArena, WebArena, TheAgentCompany)
 scores an agent against fixed public software: LibreOffice, GIMP, a stock OS image, a public
@@ -46,39 +121,6 @@ blocks it before it reaches the page, records it as a forbidden-action violation
 the gate even though the task's own success check still passed. A single guardrail violation
 tanks the score instead of averaging out across a large suite.
 
-## Install
-
-```
-npm install -g deskcert-cli
-npx playwright install chromium
-```
-
-or
-
-```
-pip install deskcert-cli
-playwright install chromium
-```
-
-Both packages install a `deskcert` binary with the same `init`/`run`/`ci`/`mcp` surface,
-scored by the same rules (see [Scoring model](#scoring-model)). The Python package adds one
-convenience-only command, `deskcert serve-fixture`, so you can run the bundled fixture app
-without Node installed; the npm package's equivalent is running its bundled
-`fixture-app/server.mjs` directly with `node`, as shown below.
-
-## Quickstart
-
-```
-deskcert init                                    # scaffold an example suite + fixture app
-node ./deskcert-suite/fixture-app/server.mjs &    # or: deskcert serve-fixture (Python, no Node needed)
-deskcert run --agent scripted --suite ./deskcert-suite
-```
-
-`deskcert init` writes a runnable example: two tasks, a tiny local admin panel to run them
-against, and the JSON Schema DeskCert validates every suite with. Point `--suite` at a copy
-of that directory with your own `target_url`, tasks, and forbidden actions once you're ready
-to test a real application and a real agent.
-
 ## What DeskCert does, and does not, cover
 
 DeskCert currently certifies agents against **web applications**, driven through the browser with
@@ -87,36 +129,6 @@ Windows/macOS window automation. Full desktop-environment orchestration is the a
 OSWorld and WindowsAgentArena take, and it is heavy infrastructure a browser-first tool does
 not need to promise. Most internal enterprise tools (admin panels, CRUD dashboards, internal
 consoles) are web apps today, which is what DeskCert is scoped to test well.
-
-## Features
-
-- **Bring your own application.** `target_url` in a task definition points at whatever you're
-  testing: staging, a local fixture, an internal environment behind your VPN. DeskCert never
-  ships a fixed task set to run against public software.
-- **Explicit forbidden-action gate.** Every task lists `forbidden_actions` by name. If the
-  agent attempts one, DeskCert intercepts it before it reaches the page, records the
-  violation with the exact action and step number, and fails the suite gate unconditionally.
-  A violation is never averaged away by an otherwise-good score.
-- **CI-runnable exit codes.** `deskcert ci` exits `0` on a pass, `1` when the score is below
-  threshold, `2` when any forbidden-action violation occurred, so a pipeline can distinguish
-  "not good enough yet" from "this agent tried something dangerous."
-- **Pluggable agent adapter.** `AgentAdapter` is a two-method interface: given a screenshot
-  and an accessibility-tree text dump, return the next action. Wire up Claude computer-use,
-  LangGraph, CrewAI, or an in-house loop in a few lines; the bundled `scripted` adapter needs
-  no agent or API key at all, for a first run or for CI self-tests. See
-  [docs/agent-adapter.md](docs/agent-adapter.md) for the full interface and a worked example.
-- **Two independent implementations, one scoring contract.** The npm package and the PyPI
-  package each run their own Playwright driver and their own scorer, with the Python package
-  implementing its own runner and scorer directly. Both are required to score the same
-  fixture run identically; `python/tests/test_parity.py` checks it directly against a built
-  `dist/cli.js`.
-- **MCP server for agent-native invocation.** `deskcert mcp` exposes a `run_suite` tool over
-  stdio, so a deployment pipeline or an orchestrating agent can call DeskCert as a tool
-  instead of shelling out to a CLI.
-- **`target_url` is restricted to `http(s)://`.** The task-suite schema rejects `file://` and
-  `javascript:` URLs outright, so a malicious or careless task definition can't be used to read
-  local files or execute an inline script through the runner. See
-  [`schema/task-suite.schema.json`](schema/task-suite.schema.json).
 
 ## CLI reference
 
@@ -216,25 +228,6 @@ and violation components.
 **A passing DeskCert score means the agent passed this specific task suite and these specific
 guardrails.** It is not a general safety certification, and no output from this tool should be
 read as one.
-
-## Comparison
-
-| | DeskCert | [OSWorld](https://github.com/xlang-ai/OSWorld) | [WindowsAgentArena](https://github.com/microsoft/WindowsAgentArena) | [TheAgentCompany](https://github.com/TheAgentCompany/TheAgentCompany) | [OpenAgentSafety](https://github.com/Open-Agent-Safety/OpenAgentSafety) |
-|---|---|---|---|---|---|
-| Target application | **Your own web app** | Fixed public software (LibreOffice, GIMP, Chrome, VS Code) | Fixed public Windows software | A simulated company environment | A fixed simulated environment |
-| Task suite | **You author it, in YAML** | Fixed benchmark tasks | Fixed benchmark tasks | Fixed benchmark tasks | Fixed adversarial-instruction tasks |
-| Explicit forbidden-action gate | **Yes, weighted heavily, unconditional gate fail** | No | No | No | Adversarial-instruction focus, not a per-task allow/forbid gate |
-| CI-runnable exit code | **Yes (0/1/2)** | Not designed for CI gating | Not designed for CI gating | Not designed for CI gating | Not designed for CI gating |
-| Environment | Browser (Playwright) | Full OS via VM snapshot | Full Windows OS via VM | Containerized simulated company | Simulated environment |
-| GitHub stars (2026-08-03) | new | 3,061 | 885 | 755 | 32 |
-| Last commit (2026-08-03) | today | 2026-07-28 | 2026-04-13 | 2025-11-17 | 2026-07-06 |
-
-OSWorld, WindowsAgentArena, and TheAgentCompany are capability benchmarks: they answer "how
-good is this agent at generic tasks." None of the four let you plug in your own application
-and your own task suite, and none treat a specific forbidden action as an unconditional gate
-failure the way DeskCert does. If your question is "how capable is this agent in general,"
-those four are the right tools. If your question is "can I trust this agent near *our*
-production admin panel," that's the gap DeskCert fills.
 
 ## What is DeskCert, and why does it exist
 
