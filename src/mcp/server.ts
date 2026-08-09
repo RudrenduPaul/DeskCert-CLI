@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { runCommand, exitCodeFor } from "../commands/run.js";
 import { formatReportJson } from "../core/report.js";
+import { VERSION } from "../version.js";
 
 /**
  * DeskCert MCP server: exposes the same run/score capability the CLI has, so an
@@ -12,7 +13,7 @@ import { formatReportJson } from "../core/report.js";
 export function createServer(): McpServer {
   const server = new McpServer({
     name: "deskcert",
-    version: "0.1.0",
+    version: VERSION,
   });
 
   server.registerTool(

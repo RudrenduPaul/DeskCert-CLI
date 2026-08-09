@@ -7,6 +7,9 @@ Its scorer produces identical scores to the TypeScript package for the same
 fixture run; see tests/test_parity.py.
 """
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from .adapter import ScriptedAdapter, load_adapter_module
 from .loader import load_suite
 from .report import format_report_human, format_report_json
@@ -24,7 +27,15 @@ from .types import (
     TaskResult,
 )
 
-__version__ = "0.1.2"
+try:
+    # Single source of truth: read the version from the installed distribution's
+    # own metadata (built from pyproject.toml's `version` field) instead of a
+    # hardcoded string here. A hardcoded copy previously drifted out of sync
+    # with the version actually published to PyPI, so `deskcert --version`
+    # reported a stale, incorrect version on live installs.
+    __version__ = _pkg_version("deskcert-cli")
+except PackageNotFoundError:  # pragma: no cover - local checkout without installed metadata
+    __version__ = "0.0.0-dev"
 
 __all__ = [
     "DEFAULT_FORBIDDEN_ACTION_WEIGHT",
