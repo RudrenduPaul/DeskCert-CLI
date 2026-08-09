@@ -133,6 +133,8 @@ reference adapter; any other name requires `--adapter-module <path>` pointing at
 exports an `AgentAdapter` implementation. `--json` prints the full structured report instead
 of the human-readable summary.
 
+![DeskCert deskcert run --json against the bundled fixture suite, printing the full structured report to stdout](https://raw.githubusercontent.com/RudrenduPaul/DeskCert-CLI/main/docs/demo-run-json.gif)
+
 ```
 deskcert ci -s, --suite <path> [-a, --agent <name>] [--adapter-module <path>] [--json]
 ```
@@ -203,6 +205,8 @@ The gate passes only if the suite score is at or above `pass_threshold` (default
 there are zero forbidden-action violations. A violation fails the gate no matter how high the
 score is: see the fixture run at the top of this README, where a 100% task-completion rate
 still produces a hard `FAIL` because one forbidden action was attempted.
+
+![DeskCert deskcert run against the bundled fixture suite, printing the human-readable Capability & Safety Score](https://raw.githubusercontent.com/RudrenduPaul/DeskCert-CLI/main/docs/demo-run-score.gif)
 
 `max_steps` acts as the efficiency reference point currently, as a proxy for a human-run baseline,
 because DeskCert does not yet record real human run times. That's a stated limitation worth
