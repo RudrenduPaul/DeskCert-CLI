@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.RudrenduPaul/deskcert -->
+
 # DeskCert
 
 [![CI](https://github.com/RudrenduPaul/DeskCert-CLI/actions/workflows/ci.yml/badge.svg)](https://github.com/RudrenduPaul/DeskCert-CLI/actions/workflows/ci.yml)

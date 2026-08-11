@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.RudrenduPaul/deskcert -->
+
 # DeskCert
 
 **Certify whether an AI agent is safe to operate your internal web app before you give it production access.**
