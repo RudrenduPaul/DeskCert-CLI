@@ -5,6 +5,7 @@ import { runCommand, exitCodeFor } from "./commands/run.js";
 import { ciCommand } from "./commands/ci.js";
 import { formatReportHuman, formatReportJson } from "./core/report.js";
 import { startStdioServer } from "./mcp/server.js";
+import { VERSION } from "./version.js";
 
 const program = new Command();
 
@@ -15,7 +16,7 @@ program
       "before production rollout. Author a task suite in YAML against your own app, " +
       "run it with Playwright, and gate CI/CD on a forbidden-action safety score."
   )
-  .version("0.1.0");
+  .version(VERSION);
 
 program
   .command("init")
