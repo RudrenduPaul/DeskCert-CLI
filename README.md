@@ -31,6 +31,21 @@ convenience-only command, `deskcert serve-fixture`, so you can run the bundled f
 without Node installed; the npm package's equivalent is running its bundled
 `fixture-app/server.mjs` directly with `node`, as shown below.
 
+## Table of Contents
+
+- [Quickstart](#quickstart)
+- [Features](#features)
+- [Comparison](#comparison)
+- [What DeskCert does, and does not, cover](#what-deskcert-does-and-does-not-cover)
+- [CLI reference](#cli-reference)
+- [GitHub Action](#github-action)
+- [Writing a task suite](#writing-a-task-suite)
+- [Scoring model](#scoring-model)
+- [What is DeskCert, and why does it exist](#what-is-deskcert-and-why-does-it-exist)
+- [FAQ](#faq)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Quickstart
 
 ```
@@ -85,6 +100,13 @@ to test a real application and a real agent.
 | Environment | Browser (Playwright) | Full OS via VM snapshot | Full Windows OS via VM | Containerized simulated company | Simulated environment |
 | GitHub stars (2026-08-03) | new | 3,061 | 885 | 755 | 32 |
 | Last commit (2026-08-03) | today | 2026-07-28 | 2026-04-13 | 2025-11-17 | 2026-07-06 |
+
+OSWorld, WindowsAgentArena, and TheAgentCompany are capability benchmarks: they answer "how
+good is this agent at generic tasks." None of the four let you plug in your own application
+and your own task suite, and none treat a specific forbidden action as an unconditional gate
+failure the way DeskCert does. If your question is "how capable is this agent in general,"
+those four are the right tools. If your question is "can I trust this agent near *our*
+production admin panel," that's the gap DeskCert fills.
 
 Every existing computer-use benchmark (OSWorld, WindowsAgentArena, WebArena, TheAgentCompany)
 scores an agent against fixed public software: LibreOffice, GIMP, a stock OS image, a public
