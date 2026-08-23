@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.5] - 2026-08-10
+
+### Added
+
+- **MCP registry ownership proof**: added `<!-- mcp-name: io.github.RudrenduPaul/deskcert -->`
+  to the top of `README.md` and `python/README.md`, and a `mcpName` field to
+  `package.json`, so the [MCP Registry](https://github.com/modelcontextprotocol/registry)
+  can verify this repository's ownership of the `io.github.RudrenduPaul/deskcert`
+  server name.
+- **`python/server.json`**: new MCP registry server manifest describing the
+  `deskcert mcp` entry point (PyPI package `deskcert-cli`, invoked via `uvx`
+  with a `stdio` transport), so the server can be published to the MCP
+  Registry.
+
+Note: this version bump was made in the source repository but has not yet
+been published to npm as of this changelog entry (PyPI has since caught up
+to 0.1.5). Published-package versions can lag the repository; always check
+the registries for the actual live version.
+
 ## [0.1.4] - 2026-08-08
 
 ### Fixed
