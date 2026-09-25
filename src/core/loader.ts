@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import path from "node:path";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 import { validateSuiteObject } from "./schema.js";
 import type { SuiteConfig, TaskDefinition } from "./types.js";
 

@@ -7,7 +7,10 @@ from __future__ import annotations
 
 from typing import Optional
 
-from mcp.server.fastmcp import FastMCP
+try:
+    from mcp.server.mcpserver import MCPServer as FastMCP  # mcp >= 2
+except ImportError:  # pragma: no cover
+    from mcp.server.fastmcp import FastMCP  # mcp 1.x
 
 from .report import format_report_json
 from .run_cmd import exit_code_for, run_command

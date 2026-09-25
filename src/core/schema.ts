@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import Ajv, { type ErrorObject } from "ajv";
 import addFormats from "ajv-formats";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 import type { SuiteConfig } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
