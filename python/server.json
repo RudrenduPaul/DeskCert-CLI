@@ -6,12 +6,12 @@
     "url": "https://github.com/RudrenduPaul/DeskCert-CLI",
     "source": "github"
   },
-  "version": "0.1.5",
+  "version": "0.2.0",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "deskcert-cli",
-      "version": "0.1.5",
+      "version": "0.2.0",
       "runtimeHint": "uvx",
       "runtimeArguments": [
         {

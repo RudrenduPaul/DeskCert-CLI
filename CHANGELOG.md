@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.0] - 2026-09-24
+
+### Changed
+
+- **Dependency upgrades (npm)**: `@modelcontextprotocol/sdk` ^1.0.4 to ^1.30.1,
+  `zod` ^3.23.8 to ^4.6.5, `js-yaml` ^4.1.0 to ^5.4.2, `commander` ^12.1.0 to
+  ^13.1.0, `playwright` ^1.48.2 to ^1.61.1, `ajv` ^8.17.1 to ^8.20.0. Dev
+  tooling moved to TypeScript 6 and ESLint 10.
+- **Dependency upgrade (Python)**: the `mcp` upper bound (`<2.0.0`) is removed,
+  so `mcp>=1.1.0` now resolves to current releases.
+- **Support floor**: the npm package now declares Node 20 or newer
+  (`engines.node >=20`), matching the Playwright requirement. Node 18 is no
+  longer supported. The Python floor is unchanged (3.9+).
+- **Publishing**: npm releases now publish through npm Trusted Publishing
+  (GitHub Actions OIDC) from `.github/workflows/publish-npm.yml`. No
+  long-lived npm token is used.
+- npm and PyPI versions are aligned at 0.2.0.
+
 ## [0.1.5] - 2026-08-10
 
 ### Added

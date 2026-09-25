@@ -298,7 +298,7 @@ Yes, that's the intended use. `deskcert ci` returns exit code `0`/`1`/`2`, and
 working GitHub Actions step built on it.
 
 **Does DeskCert run on Windows, macOS, and Linux?**
-Yes. Both the npm and PyPI packages run wherever their runtime does (Node 18+, Python 3.9+)
+Yes. Both the npm and PyPI packages run wherever their runtime does (Node 20+, Python 3.9+)
 and wherever Playwright's Chromium build runs, which covers Windows, macOS, and Linux. Nothing
 in the task runner or scorer is platform-specific.
 
