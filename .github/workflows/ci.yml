@@ -55,5 +55,6 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: pip install -e "./python[dev]"
+      - run: python -m playwright install --with-deps chromium
       - run: pytest tests/test_parity.py -v
         working-directory: python
